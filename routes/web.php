@@ -1,7 +1,11 @@
-<?php
+@extends('layouts.app')
 
-// デフォルトのコメント部分は省略
-
-Route::get('/', 'TasksController@index');
-
-Route::resource('tasks', 'TasksController');
+@section('content')
+        <div class="center jumbotron">
+            <div class="text-center">
+                <h1>やあ</h1>
+                {{-- 会員登録ページへのリンク --}}
+            </div>
+        </div>
+    @endif
+@endsection
