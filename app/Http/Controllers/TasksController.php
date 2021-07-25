@@ -49,7 +49,7 @@ class TasksController extends Controller
 
 
         // トップページへリダイレクトさせる
-        return redirect('/');
+        return redirect('welcome');
     }
 
     // getでtasks/idにアクセスされた場合の「取得表示処理」
