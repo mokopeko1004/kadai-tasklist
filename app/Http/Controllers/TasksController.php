@@ -11,15 +11,15 @@ class TasksController extends Controller
     // getでtasks/にアクセスされた場合の「一覧表示処理」
     public function index()
     {
-        // タスク一覧を取得
-        $tasks = Task::all();
+        // タスク一覧をidの降順で取得
+        $tasks = Task::orderBy('id', 'desc')->paginate(25);
 
         // タスク一覧ビューでそれを表示
-        return view('tasks.index', [
+        return view('welcome', [
             'tasks' => $tasks,
         ]);
     }
-
+    
     // getでtasks/createにアクセスされた場合の「新規登録画面表示処理」
     public function create()
     {
@@ -40,11 +40,13 @@ class TasksController extends Controller
             'status' => 'required|max:10',
         ]);
         
-        // タスクを作成
-        $task = new Task;
-        $task->content = $request->content;
-        $task->status = $request->status;
-        $task->save();
+        // 認証済みユーザ（閲覧者）の投稿として作成（リクエストされた値をもとに作成）
+        $request->user()->tasks()->create([
+            'content' => $request->content,
+            'status' => $request->content,
+        ]);
+        
+
 
         // トップページへリダイレクトさせる
         return redirect('/');
@@ -62,7 +64,7 @@ class TasksController extends Controller
         ]);
     }
 
-    // getでmessages/id/editにアクセスされた場合の「更新画面表示処理」
+    // getでtasks/id/editにアクセスされた場合の「更新画面表示処理」
     public function edit($id)
     {
         // idの値でタスクを検索して取得
