@@ -30,9 +30,6 @@ class TasksController extends Controller
     }
     
     
-    
-    
-    
     // getでtasks/createにアクセスされた場合の「新規登録画面表示処理」
     public function create()
     {
@@ -59,8 +56,6 @@ class TasksController extends Controller
             'status' => $request->content,
         ]);
         
-
-
         // トップページへリダイレクトさせる
         return redirect('/');
     }
@@ -69,24 +64,35 @@ class TasksController extends Controller
     public function show($id)
     {
         // idの値でタスクを検索して取得
-        $task = Task::findOrFail($id);
-
+        $task = \App\Task::findOrFail($id);
+        
+        if (\Auth::id() === $task->user_id) {
         // タスク詳細ビューでそれを表示
         return view('tasks.show', [
             'task' => $task,
         ]);
+        }
+        
+        // トップページへリダイレクトさせる
+        return redirect('/'); 
+        
     }
 
     // getでtasks/id/editにアクセスされた場合の「更新画面表示処理」
     public function edit($id)
     {
-        // idの値でタスクを検索して取得
-        $task = Task::findOrFail($id);
-
+         // idの値でタスクを検索して取得
+        $task = \App\Task::findOrFail($id);
+        
+        if (\Auth::id() === $task->user_id) {
         // タスク編集ビューでそれを表示
         return view('tasks.edit', [
             'task' => $task,
         ]);
+     }
+        
+        // トップページへリダイレクトさせる
+        return redirect('/');    
     }
 
     // putまたはpatchでtasks/idにアクセスされた場合の「更新処理」
@@ -113,9 +119,12 @@ class TasksController extends Controller
     public function destroy($id)
     {
         // idの値でタスクを検索して取得
-        $task = Task::findOrFail($id);
+        $task = \App\Task::findOrFail($id);
+        
+        if (\Auth::id() === $task->user_id) {
         // タスクを削除
         $task->delete();
+        }
 
         // トップページへリダイレクトさせる
         return redirect('/');
